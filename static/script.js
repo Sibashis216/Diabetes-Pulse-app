@@ -5,7 +5,7 @@
 // Update this to your deployed Flask backend URL after deployment.
 // e.g. const API_BASE = "https://pulse-diabetes-api.vercel.app";
 // const API_BASE = "http://localhost:5000";
-const API_BASE = "https://pulse-diabetes-api.vercel.app";
+const API_BASE = "https://diabetes-pulse-app.vercel.app/";
 
 const FEATURES = [
   "Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
