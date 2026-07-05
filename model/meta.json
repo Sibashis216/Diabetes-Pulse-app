@@ -1,0 +1,94 @@
+{
+  "features": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age"
+  ],
+  "zero_cols": [
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI"
+  ],
+  "medians_for_zero_fill": {
+    "Glucose": 117.0,
+    "BloodPressure": 72.0,
+    "SkinThickness": 29.0,
+    "Insulin": 125.0,
+    "BMI": 32.3
+  },
+  "stats": {
+    "Pregnancies": {
+      "min": 0.0,
+      "max": 17.0,
+      "mean": 3.8450520833333335,
+      "median": 3.0
+    },
+    "Glucose": {
+      "min": 44.0,
+      "max": 199.0,
+      "mean": 121.65625,
+      "median": 117.0
+    },
+    "BloodPressure": {
+      "min": 24.0,
+      "max": 122.0,
+      "mean": 72.38671875,
+      "median": 72.0
+    },
+    "SkinThickness": {
+      "min": 7.0,
+      "max": 99.0,
+      "mean": 29.108072916666668,
+      "median": 29.0
+    },
+    "Insulin": {
+      "min": 14.0,
+      "max": 846.0,
+      "mean": 140.671875,
+      "median": 125.0
+    },
+    "BMI": {
+      "min": 18.2,
+      "max": 67.1,
+      "mean": 32.45520833333333,
+      "median": 32.3
+    },
+    "DiabetesPedigreeFunction": {
+      "min": 0.078,
+      "max": 2.42,
+      "mean": 0.47187630208333325,
+      "median": 0.3725
+    },
+    "Age": {
+      "min": 21.0,
+      "max": 81.0,
+      "mean": 33.240885416666664,
+      "median": 29.0
+    }
+  },
+  "metrics": {
+    "train_accuracy": 0.7801,
+    "test_accuracy": 0.7727,
+    "cv_accuracy_mean": 0.7643,
+    "cv_accuracy_std": 0.0163,
+    "roc_auc": 0.8204,
+    "confusion_matrix": [
+      [
+        91,
+        9
+      ],
+      [
+        26,
+        28
+      ]
+    ]
+  },
+  "sklearn_note": "Model retrained locally to match deployment sklearn version."
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PULSE — Diabetes Risk Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="scanlines" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M2 12h4l2-7 4 14 2-9 2 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <div class="brand-text">
+      <span class="brand-name">PULSE</span>
+      <span class="brand-sub">Diabetes Risk Monitor</span>
+    </div>
+  </div>
+  <div class="topbar-status">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">Model standing by</span>
+  </div>
+</header>
+
+<main class="monitor-shell">
+
+  <!-- HERO: live ECG strip -->
+  <section class="strip-panel" aria-label="Live waveform monitor">
+    <div class="strip-head">
+      <span class="strip-label">WAVEFORM</span>
+      <span class="strip-reading" id="strip-reading">— awaiting input —</span>
+    </div>
+    <svg id="ekg" class="ekg-svg" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#173247" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="1200" height="220" fill="url(#grid)" />
+      <path id="ekgPath" class="ekg-path" d="" fill="none" />
+    </svg>
+  </section>
+
+  <div class="workspace">
+
+    <!-- LEFT: patient chart / form -->
+    <section class="chart-panel" aria-label="Patient measurements">
+      <h2 class="panel-title">Patient Chart</h2>
+      <p class="panel-sub">Enter the eight clinical measurements below. Values match the PIMA diagnostic panel used to train this model.</p>
+
+      <form id="predict-form">
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="Pregnancies">Pregnancies</label>
+            <input type="number" id="Pregnancies" name="Pregnancies" min="0" step="1" value="2" required />
+            <span class="hint">count</span>
+          </div>
+
+          <div class="field">
+            <label for="Glucose">Glucose</label>
+            <input type="number" id="Glucose" name="Glucose" min="0" step="0.1" value="120" required />
+            <span class="hint">mg/dL, plasma</span>
+          </div>
+
+          <div class="field">
+            <label for="BloodPressure">Blood Pressure</label>
+            <input type="number" id="BloodPressure" name="BloodPressure" min="0" step="0.1" value="70" required />
+            <span class="hint">mmHg, diastolic</span>
+          </div>
+
+          <div class="field">
+            <label for="SkinThickness">Skin Thickness</label>
+            <input type="number" id="SkinThickness" name="SkinThickness" min="0" step="0.1" value="20" required />
+            <span class="hint">mm, triceps fold</span>
+          </div>
+
+          <div class="field">
+            <label for="Insulin">Insulin</label>
+            <input type="number" id="Insulin" name="Insulin" min="0" step="0.1" value="80" required />
+            <span class="hint">mu U/mL, 2‑hr serum</span>
+          </div>
+
+          <div class="field">
+            <label for="BMI">BMI</label>
+            <input type="number" id="BMI" name="BMI" min="0" step="0.1" value="28.5" required />
+            <span class="hint">kg/m²</span>
+          </div>
+
+          <div class="field">
+            <label for="DiabetesPedigreeFunction">Pedigree Function</label>
+            <input type="number" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction" min="0" step="0.001" value="0.42" required />
+            <span class="hint">family history score</span>
+          </div>
+
+          <div class="field">
+            <label for="Age">Age</label>
+            <input type="number" id="Age" name="Age" min="1" step="1" value="33" required />
+            <span class="hint">years</span>
+          </div>
+
+        </div>
+
+        <button type="submit" id="runBtn" class="run-btn">
+          <span class="run-btn-label">Run Assessment</span>
+          <span class="run-btn-pulse" aria-hidden="true"></span>
+        </button>
+        <p class="form-error" id="formError" role="alert"></p>
+      </form>
+    </section>
+
+    <!-- RIGHT: readout -->
+    <section class="readout-panel" aria-label="Prediction readout">
+      <h2 class="panel-title">Readout</h2>
+
+      <div class="readout-empty" id="readoutEmpty">
+        <span class="readout-empty-icon">◌</span>
+        <p>No reading yet. Complete the chart and run an assessment to see the risk readout.</p>
+      </div>
+
+      <div class="readout-body" id="readoutBody" hidden>
+        <div class="score-block">
+          <div class="score-number-wrap">
+            <span class="score-number" id="scoreNumber">00</span>
+            <span class="score-percent">%</span>
+          </div>
+          <span class="score-label">probability of diabetic outcome</span>
+        </div>
+
+        <div class="band-badge" id="bandBadge">
+          <span class="band-dot"></span>
+          <span id="bandText">—</span>
+        </div>
+
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gaugeFill"></div>
+          <div class="gauge-ticks">
+            <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+          </div>
+        </div>
+
+        <div class="verdict" id="verdictText"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="model-footer">
+    <div class="footer-metrics" id="footerMetrics">Loading model metrics…</div>
+    <p class="disclaimer">PULSE is a portfolio ML demo trained on the PIMA Indians Diabetes dataset. It is not a diagnostic tool and does not substitute for professional medical advice.</p>
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
